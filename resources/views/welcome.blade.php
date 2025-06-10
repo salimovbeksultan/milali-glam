@@ -28,34 +28,26 @@
                     @if (is_null($order))
                         <button type="submit" class="btn btn-dark w-100 text-uppercase">Отправить</button>
                     @else
-                        <button type="button" class="btn btn-dark w-100 text-uppercase" onclick="send()">Оплатить</button>
+                        <button id="kaspi-btn" type="button" class="btn btn-dark w-100 text-uppercase">Оплатить</button>
                     @endif
                 </form>
             </div>
         </div>
     </div>
+	@if (!is_null($order))
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("kaspi-btn").addEventListener("click", function (e) {
+            e.preventDefault();
 
-    @if(!is_null($order))
-    <script>
+            window.open('https://prodlenka1-4.kz/createPayment?orderId={{$order->id}}&phone={{$order->phone}}', '_blank').focus();
+        });
+    });
+</script>
+@endif
 
-        function send() {
-            let form = document.createElement('form');
-            let id = {{ $order->id }};
-            let amount = 9500 * 100;
-            form.action = "https://kaspi.kz/online";
-            form.method = 'POST';
-            form.target = "_blank";
-            form.innerHTML = `<input type="hidden" name="TranId" value="${id}">`;
-            form.innerHTML += `<input type="hidden" name="OrderId" value="${id}">`;
-            form.innerHTML += `<input type="hidden" name="Amount" value="${amount}">`;
-            form.innerHTML += '<input type="hidden" name="Service" value="milali">';
-            form.innerHTML += '<input type="hidden" name="returnUrl" value="https://milaliglam.kz/">';
-            form.innerHTML += '<input type="hidden" name="Signature" value="">';
-            document.body.append(form);
-            form.submit();
-        }
 
-        document.getElementById("kaspi-btn").click();
-    </script>
-    @endif
 @endsection
+
+
+
